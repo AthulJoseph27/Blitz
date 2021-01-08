@@ -90,14 +90,8 @@ public:
 			batchError.add(MSE(labels[i], Matrix::oneDArray(layers.back())));
 		}
 		batchError.scale(1.0 / ((double)end - (double)start));
-		// layers.back().print();
-		// batchError.print();
-		// std::cout << labels[start][0] << std::endl;
-		// std::cout << "*****************" << std::endl;
-		// BackPropogation
 
 		std::vector<Matrix> errors;
-		// std::vector<Matrix> deltaWeights;
 
 		errors.push_back(batchError);
 

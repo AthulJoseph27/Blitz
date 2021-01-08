@@ -29,7 +29,7 @@ int main()
 	}
 	NeuralNetwork nn = NeuralNetwork({2, 3, 2, 1}, {"sigmoid", "sigmoid", "sigmoid"});
 	nn.train(labelsT, dataT, 1);
-	// nn.print();
+
 	cout << "***********" << endl;
 	cout << endl;
 	for (auto i : data)
