@@ -61,7 +61,7 @@ public:
 
 		for (int i = 0; i < matrix.size(); i++)
 			for (int j = 0; j < matrix[0].size(); j++)
-				result[i][j] = matrix[j][i];
+				result[j][i] = matrix[i][j];
 
 		matrix = result;
 	}
@@ -70,8 +70,12 @@ public:
 	{
 
 		if (matrix[0].size() != B.matrix.size())
+		{
+			print();
+			B.print();
+			std::cout << 2 << std::endl;
 			throw std::invalid_argument("Matrices cannot be multiplied");
-
+		}
 		// std::cout << "Hello" << std::endl;
 		std::vector<std::vector<double>>
 			product(matrix.size(), std::vector<double>(B.matrix[0].size(), 0));
@@ -88,10 +92,23 @@ public:
 		matrix = product;
 	}
 
+	void hadamadProduct(Matrix B)
+	{
+		if (matrix.size() != B.matrix.size() || matrix[0].size() != B.matrix[0].size())
+			std::invalid_argument("hadamadProduct, Invalid arguments");
+
+		for (int i = 0; i < matrix.size(); i++)
+			for (int j = 0; j < matrix[0].size(); j++)
+				matrix[i][j] *= B.matrix[i][j];
+	}
 	static std::vector<std::vector<double>> multiply(Matrix A, Matrix B)
 	{
 		if (A.matrix[0].size() != B.matrix.size())
+		{
+			A.print();
+			B.print();
 			throw std::invalid_argument("Matrices cannot be multiplied");
+		}
 
 		// std::cout << "Hello" << std::endl;
 		std::vector<std::vector<double>>
@@ -131,8 +148,8 @@ public:
 	void add(Matrix B)
 	{
 
-		if (B.matrix[0].size() != matrix[0].size() && matrix.size() != B.matrix.size())
-			throw std::invalid_argument("Invalid Shape");
+		if (B.matrix.size() != matrix.size() || matrix[0].size() != B.matrix[0].size())
+			throw std::invalid_argument("Cannot add matrices, Invalid Shape");
 
 		for (int i = 0; i < matrix.size(); i++)
 			for (int j = 0; j < matrix[0].size(); j++)

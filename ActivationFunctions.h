@@ -28,3 +28,20 @@ double softmax(double x, double sum)
 {
     return exp(x) / sum;
 }
+
+double derivativeRelu(double x)
+{
+    if (x > 0)
+        return 1.0;
+    return 0.0;
+}
+
+double derivativeTanh(double y)
+{
+    return (1 - pow(y, 2));
+}
+
+double derivativeSigmoid(double y)
+{
+    return y * (1 - y);
+}
