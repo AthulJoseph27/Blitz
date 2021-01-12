@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bits/stdc++.h>
 #include <iostream>
 #include <stdexcept>
 #include <time.h>
@@ -55,6 +54,15 @@ public:
 				matrix[i][j] += value;
 	}
 
+	double sum()
+	{
+		double s = 0;
+		for (int i = 0; i < matrix.size(); i++)
+			for (int j = 0; j < matrix.size(); j++)
+				s += matrix[i][j];
+
+		return s;
+	}
 	void transpose()
 	{
 		std::vector<std::vector<double>> result(matrix[0].size(), std::vector<double>(matrix.size()));

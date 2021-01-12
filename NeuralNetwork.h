@@ -1,13 +1,16 @@
 #pragma once
 
-#include <bits/stdc++.h>
 #include <iostream>
 #include <stdexcept>
+#include <map>
+#include <vector>
+#include <random>
 #include <time.h>
 #include <fstream>
 #include "Matrix.h"
 #include "ActivationFunctions.h"
 #include "LossFunctions.h"
+#include "miscellaneousFunctions.h"
 
 class NeuralNetwork
 {
@@ -18,6 +21,20 @@ private:
 	std::vector<Matrix> bias;
 	std::vector<std::string> activation;
 	std::map<std::string, double> configurations; // {learning_rate, no_of_steps}
+
+	void readConfiguration()
+	{
+		std::fstream file;
+		file.open("configuration.txt", std::ios::in);
+		std::string id;
+		char c;
+		double value;
+		while (file >> id >> c >> value)
+		{
+			configurations[id] = value;
+		}
+		file.close();
+	}
 
 public:
 	NeuralNetwork(std::vector<int> layerCount, std::vector<std::string> activation)
@@ -37,6 +54,8 @@ public:
 			weights[i].randomize();
 			bias[i].randomize();
 		}
+
+		readConfiguration();
 	}
 
 	Matrix feedForward(std::vector<double> input)
@@ -71,14 +90,26 @@ public:
 		return layers.back();
 	}
 
-	// void loadConfig()
-	// {
-	// 	fstream file;
-	// 	file.open("Config.txt",ios::in);
-	// 	while(!file.eof){
+	void Normalize(std::vector<std::vector<std::vector<double>>> &data_labels, std::string function)
+	{
 
-	// 	}
-	// }
+		if (function == "sigmoid")
+		{
+			for (int k = 0; k < data_labels.size(); k++)
+			{
+				for (int i = 0; i < data_labels[k][0].size(); i++)
+					data_labels[k][0][i] = sigmoid(data_labels[k][0][i]);
+			}
+		}
+		else if (function == "grayImage")
+		{
+			for (int k = 0; k < data_labels.size(); k++)
+			{
+				for (int i = 0; i < data_labels[k][0].size(); i++)
+					data_labels[k][0][i] /= 255;
+			}
+		}
+	}
 
 	void trainBatch(std::vector<std::vector<double>> &labels, std::vector<std::vector<double>> &data, int start, int end)
 	{
@@ -87,7 +118,7 @@ public:
 		for (long i = start; i < end; i++)
 		{
 			feedForward(data[i]);
-			batchError.add(MSE(labels[i], Matrix::oneDArray(layers.back())));
+			batchError.add(DifferenceError(labels[i], Matrix::oneDArray(layers.back())));
 		}
 		batchError.scale(1.0 / ((double)end - (double)start));
 
@@ -126,15 +157,47 @@ public:
 		}
 	}
 
-	void train(std::vector<std::vector<double>> &labels, std::vector<std::vector<double>> &data, int batchSize)
+	void shuffleData(std::vector<std::vector<std::vector<double>>> &data)
 	{
-		if (batchSize > data.size())
+
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		auto randomEngine = std::default_random_engine{seed};
+		std::shuffle(data.begin(), data.end(), randomEngine);
+	}
+
+	void train(std::vector<std::vector<std::vector<double>>> &data_labels, std::string normalizingFunction)
+	{
+		Normalize(data_labels, normalizingFunction);
+		int batchSize, epoch;
+		double learning_rate = configurations["learning_rate"];
+		batchSize = (int)configurations["batch_size"];
+		epoch = (int)configurations["epoch"];
+
+		for (int e = 0; e < epoch; e++)
 		{
-			trainBatch(labels, data, 0, data.size());
-		}
-		for (long i = batchSize; i < data.size(); i += batchSize)
-		{
-			trainBatch(labels, data, i - batchSize, i);
+			std::cout << "Epoch " << e + 1 << "\n";
+			shuffleData(data_labels);
+
+			std::vector<std::vector<double>> labels = {};
+			std::vector<std::vector<double>> data = {};
+
+			for (auto i : data_labels)
+			{
+				labels.push_back(i[1]);
+				data.push_back(i[0]);
+			}
+
+			// data_labels.clear();
+
+			if (batchSize > data_labels.size())
+			{
+				trainBatch(labels, data, 0, data_labels.size());
+				return;
+			}
+			for (long i = batchSize; i < data_labels.size(); i += batchSize)
+			{
+				trainBatch(labels, data, i - batchSize, i);
+			}
 		}
 	}
 
@@ -143,8 +206,124 @@ public:
 		feedForward(data).print();
 		std::cout << std::endl;
 	}
+	void saveModel(std::string fileName)
+	{
+		std::fstream file;
+
+		if (fileName.empty() || (fileName.substr(fileName.size() - 4, fileName.size() - 1) != ".txt"))
+			std::invalid_argument("Invalid file name");
+
+		file.open(fileName, std::ios::out);
+
+		//Saving Architecture
+		file << layerCount.size() << '\n';
+		for (int i : layerCount)
+			file << i << " ";
+		file << "\n";
+
+		//Saving Weights
+		file << weights.size() << "\n";
+		for (int i = 0; i < weights.size(); i++)
+		{
+			file << weights[i].matrix.size() << " " << weights[i].matrix[0].size() << "\n";
+			for (int j = 0; j < weights[i].matrix.size(); j++)
+				for (int k = 0; k < weights[i].matrix[0].size(); k++)
+					file << weights[i].matrix[j][k] << " ";
+			file << "\n";
+		}
+
+		//Saving Bias
+		file << bias.size() << "\n";
+		for (int i = 0; i < bias.size(); i++)
+		{
+			file << bias[i].matrix.size() << " " << bias[i].matrix[0].size() << "\n";
+			for (int j = 0; j < bias[i].matrix.size(); j++)
+				for (int k = 0; k < bias[i].matrix[0].size(); k++)
+					file << bias[i].matrix[j][k] << " ";
+			file << "\n";
+		}
+
+		//Saving Activation functions
+		file << activation.size() << "\n";
+		for (std::string s : activation)
+			file << s << "\n";
+
+		file.close();
+	}
+
+	void readModel(std::string fileName)
+	{
+
+		if (fileName.empty() || (fileName.substr(fileName.size() - 4, fileName.size() - 1) != ".txt"))
+			std::invalid_argument("Invalid file name");
+
+		std::fstream file;
+
+		file.open(fileName, std::ios::in);
+		long size;
+
+		file >> size;
+
+		layerCount.clear();
+		layerCount.resize(size);
+
+		for (int i = 0; i < size; i++)
+			file >> layerCount[i];
+
+		file >> size;
+
+		weights.clear();
+		// weights.resize(size);
+
+		for (int k = 0; k < size; k++)
+		{
+			int row, col;
+			file >> row >> col;
+			weights.push_back(Matrix(row, col));
+			for (int i = 0; i < row; i++)
+			{
+				for (int j = 0; j < col; j++)
+				{
+					file >> weights.back().matrix[i][j];
+				}
+			}
+		}
+
+		file >> size;
+
+		bias.clear();
+		// bias.resize(size);
+
+		for (int k = 0; k < size; k++)
+		{
+			int row, col;
+			file >> row >> col;
+			bias.push_back(Matrix(row, col));
+			for (int i = 0; i < row; i++)
+				for (int j = 0; j < col; j++)
+					file >> bias.back().matrix[i][j];
+		}
+
+		file >> size;
+
+		activation.clear();
+		activation.resize(size);
+
+		for (int i = 0; i < size; i++)
+			file >> activation[i];
+
+		file.close();
+	}
+
 	void print()
 	{
+		std::cout << "Configurations"
+				  << "\n\n";
+
+		for (auto it = configurations.begin(); it != configurations.end(); it++)
+			std::cout << it->first << " : " << it->second << "\n";
+
+		std::cout << "\n\n";
 
 		std::cout << "Layers"
 				  << "\n\n";
