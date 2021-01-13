@@ -21,7 +21,7 @@ private:
 	std::vector<Matrix> bias;
 	std::vector<std::string> activation;
 	std::map<std::string, double> configurations; // {learning_rate, no_of_steps}
-
+	int accuracy = 0;
 	void readConfiguration()
 	{
 		std::fstream file;
@@ -118,6 +118,8 @@ public:
 		for (long i = start; i < end; i++)
 		{
 			feedForward(data[i]);
+			if (((int)labels[i][argMax(Matrix::oneDArray(layers.back()))]) == 1)
+				accuracy++;
 			batchError.add(DifferenceError(labels[i], Matrix::oneDArray(layers.back())));
 		}
 		batchError.scale(1.0 / ((double)end - (double)start));
@@ -143,7 +145,7 @@ public:
 
 			currentLayer.hadamadProduct(errors.back());
 			Matrix delta = Matrix(currentLayer.matrix);
-			delta.scale(0.1); // Replace 0.001 with configurations["lr"]
+			delta.scale(configurations["learning_rate"]); // Replace 0.001 with configurations["lr"]
 			bias[i].add(delta);
 			Matrix previousLayer = Matrix(layers[i].matrix);
 			previousLayer.transpose();
@@ -169,14 +171,13 @@ public:
 	{
 		Normalize(data_labels, normalizingFunction);
 		int batchSize, epoch;
-		double learning_rate = configurations["learning_rate"];
+		// double learning_rate = configurations["learning_rate"];
 		batchSize = (int)configurations["batch_size"];
 		epoch = (int)configurations["epoch"];
-
+		shuffleData(data_labels);
 		for (int e = 0; e < epoch; e++)
 		{
 			std::cout << "Epoch " << e + 1 << "\n";
-			shuffleData(data_labels);
 
 			std::vector<std::vector<double>> labels = {};
 			std::vector<std::vector<double>> data = {};
@@ -196,15 +197,18 @@ public:
 			}
 			for (long i = batchSize; i < data_labels.size(); i += batchSize)
 			{
+				printProgressBar(0, data_labels.size(), i);
 				trainBatch(labels, data, i - batchSize, i);
 			}
+			std::cout << "\nAccuracy = " << std::fixed << std::setprecision(2) << (((double)accuracy) * 100.0) / data_labels.size() << "%\n";
+			accuracy = 0;
 		}
 	}
 
-	void predict(std::vector<double> data)
+	Matrix predict(std::vector<double> data)
 	{
-		feedForward(data).print();
-		std::cout << std::endl;
+		return feedForward(data);
+		// std::cout << std::endl;
 	}
 	void saveModel(std::string fileName)
 	{

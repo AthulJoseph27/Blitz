@@ -19,7 +19,7 @@ Matrix DifferenceError(std::vector<double> YA, std::vector<double> YO)
     Matrix error = Matrix(YA.size(), 1);
 
     for (int i = 0; i < error.matrix.size(); i++)
-        error.matrix[i][0] = (YA[i] - YO[i]);
+        error.matrix[i][0] = YA[i] - YO[i];
 
     return error;
 }
