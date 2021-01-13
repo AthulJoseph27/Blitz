@@ -52,9 +52,9 @@ int main()
 		data_labels.push_back({Flatten(readGrayImage(tmp)), {0, 0, 1}});
 	}
 	std::cout << "Loaded Data. Training..." << std::endl;
-	// nn.train(data_labels, "non");
-	// nn.saveModel("model_00");
-	nn.readModel("model_00");
+	nn.train(data_labels, "non");
+	nn.saveModel("model_00");
+	// nn.readModel("model_00");
 	srand(time(NULL));
 	for (int i = 1000; i < 1020; i++)
 	{
