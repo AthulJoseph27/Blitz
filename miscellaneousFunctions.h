@@ -44,11 +44,9 @@ void printProgressBar(long start, long end, long currentIteration)
     if (fraction > 1)
         fraction = 1.00;
     int progress = (int)(fraction * (size.ws_col - 25));
-
     for (int k = 0; k < progress; k++)
         std::cout << "=";
     for (int k = progress; k < (size.ws_col - 25); k++)
         std::cout << " ";
-
     std::cout << "] " << std::fixed << std::setprecision(2) << (fraction * 100) << " % \r";
 }

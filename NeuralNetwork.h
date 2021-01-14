@@ -68,7 +68,6 @@ public:
 
 		for (int i = 1; i < layers.size(); i++)
 		{
-
 			layers[i].matrix = Matrix::multiply(weights[i - 1], layers[i - 1]);
 
 			layers[i].add(bias[i - 1]);
@@ -86,42 +85,27 @@ public:
 						layers[i].matrix[k][j] = softmax(layers[i].matrix[k][j], su);
 			}
 		}
-
 		return layers.back();
 	}
 
-	// void Normalize(std::vector<std::vector<std::vector<double>>> &data_labels, std::string function)
-	// {
-
-	// 	if (function == "sigmoid")
-	// 	{
-	// 		for (int k = 0; k < data_labels.size(); k++)
-	// 		{
-	// 			for (int i = 0; i < data_labels[k][0].size(); i++)
-	// 				data_labels[k][0][i] = sigmoid(data_labels[k][0][i]);
-	// 		}
-	// 	}
-	// 	else if (function == "grayImage")
-	// 	{
-	// 		for (int k = 0; k < data_labels.size(); k++)
-	// 		{
-	// 			for (int i = 0; i < data_labels[k][0].size(); i++)
-	// 				data_labels[k][0][i] /= 255.0f;
-	// 		}
-	// 	}
-	// }
-
-	void Normalize(std::vector<double> &data, const std::string &function)
+	void Normalize(std::vector<std::vector<std::vector<double>>> &data_labels, std::string function)
 	{
+
 		if (function == "sigmoid")
 		{
-			for (int i = 0; i < data.size(); i++)
-				data[i] = sigmoid(data[i]);
+			for (int k = 0; k < data_labels.size(); k++)
+			{
+				for (int i = 0; i < data_labels[k][0].size(); i++)
+					data_labels[k][0][i] = sigmoid(data_labels[k][0][i]);
+			}
 		}
 		else if (function == "grayImage")
 		{
-			for (int i = 0; i < data.size(); i++)
-				data[i] = data[i] / 255.0f;
+			for (int k = 0; k < data_labels.size(); k++)
+			{
+				for (int i = 0; i < data_labels[k][0].size(); i++)
+					data_labels[k][0][i] /= 255;
+			}
 		}
 	}
 
@@ -183,6 +167,7 @@ public:
 
 	void train(std::vector<std::vector<std::vector<double>>> &data_labels, std::string normalizingFunction)
 	{
+		Normalize(data_labels, normalizingFunction);
 		int batchSize, epoch;
 		// double learning_rate = configurations["learning_rate"];
 		batchSize = (int)configurations["batch_size"];
@@ -198,11 +183,8 @@ public:
 			for (auto i : data_labels)
 			{
 				labels.push_back(i[1]);
-				// Normalize(i[0], normalizingFunction);
 				data.push_back(i[0]);
 			}
-
-			// std::cout << "Hello" << std::endl;
 			// data_labels.clear();
 
 			if (batchSize > data_labels.size())

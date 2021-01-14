@@ -30,7 +30,7 @@ std::vector<double> Flatten(cv::Mat image)
 
     for (int i = 0; i < image.rows; i++)
         for (int j = 0; j < image.cols; j++)
-            result.push_back(((double)image.at<uint8_t>(i, j)) / 255.0f);
+            result.push_back(((double)image.at<uint8_t>(i, j)));
 
     return result;
 }
