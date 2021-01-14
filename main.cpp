@@ -17,7 +17,7 @@ int main()
 
 	vector<string> LABELS = {"CIRCLE", "SQUARE", "TRIANGLE"};
 
-	NeuralNetwork nn = NeuralNetwork({784, 64, 3}, {"sigmoid", "sigmoid", "sigmoid"});
+	NeuralNetwork nn = NeuralNetwork({784, 64, 3}, {"sigmoid", "sigmoid"});
 
 	std::string dir = "data/circle/";
 	std::vector<std::vector<std::vector<double>>> data_labels;
@@ -52,9 +52,9 @@ int main()
 		data_labels.push_back({Flatten(readGrayImage(tmp)), {0, 0, 1}});
 	}
 	std::cout << "Loaded Data. Training..." << std::endl;
-	// nn.train(data_labels, "non");
+	nn.train(data_labels, "grayImage");
 	// nn.saveModel("model_00");
-	nn.readModel("model_00");
+	// nn.readModel("model_00");
 	srand(time(NULL));
 	for (int i = 1000; i < 1020; i++)
 	{

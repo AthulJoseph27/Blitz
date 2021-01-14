@@ -68,7 +68,6 @@ public:
 
 		for (int i = 1; i < layers.size(); i++)
 		{
-
 			layers[i].matrix = Matrix::multiply(weights[i - 1], layers[i - 1]);
 
 			layers[i].add(bias[i - 1]);
@@ -86,7 +85,6 @@ public:
 						layers[i].matrix[k][j] = softmax(layers[i].matrix[k][j], su);
 			}
 		}
-
 		return layers.back();
 	}
 
@@ -187,7 +185,6 @@ public:
 				labels.push_back(i[1]);
 				data.push_back(i[0]);
 			}
-
 			// data_labels.clear();
 
 			if (batchSize > data_labels.size())
