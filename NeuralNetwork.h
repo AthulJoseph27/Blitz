@@ -184,6 +184,8 @@ public:
 			{
 				labels.push_back(i[1]);
 				data.push_back(i[0]);
+				if (i[0].size() == 0)
+					std::invalid_argument("Empty Data has been given for training!!");
 			}
 			// data_labels.clear();
 
