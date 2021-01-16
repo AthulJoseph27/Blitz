@@ -14,7 +14,7 @@
 
 Thats it! It is as simple as that, no need to worry about anything else.
 
-# Crating static library
+# Creating static library
 
 1. From the folder where you have all of your source files, run `clang++ -std=c++14 -c src1.cpp src2.cpp src3.cpp -I./include/ ${pkg-config --cflags --libs <additionalLibraries>}`
 
