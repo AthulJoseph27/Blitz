@@ -2,7 +2,7 @@
 
 ## Mac OS
 
-1. Copy the Blitz folder inside the Library folder your project directory.
+1. Copy the Blitz folder under the Library folder(of this repo) and paste it inside your project directory.
 
 2. Install OpenCv, just run brew install opencv on your terminal
 
