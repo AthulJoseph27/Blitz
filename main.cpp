@@ -7,6 +7,7 @@
 #include <time.h>
 #include "Matrix.h"
 #include "NeuralNetwork.h"
+#include "miscellaneousFunctions.h"
 #include "CNN.h"
 using namespace std;
 
