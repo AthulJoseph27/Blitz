@@ -239,26 +239,4 @@ public:
 
 		std::cout << '\n';
 	}
-
-	// double subDeterminant(std::vector<vector<double>> mat){
-
-	// 	float D = 0;
-
-	// 	if(matrix.size() == 0 || matrix[0].size() == 0)
-	// 		throw std::invalid_argument("Cannot find determinant");
-
-	// 	if(matrix.size() == 1 && matrix[0].size() == 1)
-	// 		return matrix[0][0];
-
-	// 	std::vector<std::vector<double>> temp;
-
-	// 	int sign = 1;
-
-	// 	for(int f=0;f<)
-
-	// }
-
-	// double determinant(){
-	// 	return subDeterminant(matrix);
-	// }
 };
