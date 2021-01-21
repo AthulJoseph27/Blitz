@@ -28,7 +28,7 @@ Thats it! It is as simple as that, no need to worry about anything else.
 
 6. Your can delete the .o files, the only thing that is required is .h files and .a file, place your .h files in ./include directory and .a file in the ./lib directory.
 
-7. Now, create a new directory or rename the current directory with your library name.
+7. Now, create a new directory with your library and copy paste the include folder and lib folder into that, or rename the current directory with your library name.
 
 8. Place that folder inside the project directory where you want to use this file.
 
