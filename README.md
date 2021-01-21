@@ -22,7 +22,7 @@ Thats it! It is as simple as that, no need to worry about anything else.
 
 3. The above command creates object files (with extension .o). The same command would run with any number of source files, just make sure that all the corresponding header files are in the ./include folder.
 
-4. Then run `ar rcs libYourLibraryName src1.o src2.o src3.o`
+4. Then run `ar rcs libYourLibraryName.a src1.o src2.o src3.o`
 
 5. The resulting .a is your static library.Place the resulting .a file into ./lib folder.
 
