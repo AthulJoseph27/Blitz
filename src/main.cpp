@@ -20,7 +20,7 @@ int main()
 
 	NeuralNetwork nn = NeuralNetwork({784, 64, 3}, {"sigmoid", "sigmoid"});
 
-	std::string dir = "data/circle/";
+	std::string dir = "../data/circle/";
 	std::vector<std::vector<std::vector<double>>> data_labels;
 	for (int i = 1; i <= 1000; i++)
 	{
@@ -31,7 +31,7 @@ int main()
 		data_labels.push_back({Flatten(readGrayImage(tmp)), {1, 0, 0}});
 	}
 
-	dir = "data/square/";
+	dir = "../data/square/";
 
 	for (int i = 1; i <= 1000; i++)
 	{
@@ -42,7 +42,7 @@ int main()
 		data_labels.push_back({Flatten(readGrayImage(tmp)), {0, 1, 0}});
 	}
 
-	dir = "data/triangle/";
+	dir = "../data/triangle/";
 
 	for (int i = 1; i <= 1000; i++)
 	{
@@ -64,8 +64,8 @@ int main()
 		{
 			std::string tmp = "triangle" + std::to_string(i);
 			tmp += ".png";
-			cv::Mat image = readColorImage("data/triangle/" + tmp);
-			vector<double> prd = Matrix::oneDArray(nn.predict(Flatten(readGrayImage("data/triangle/" + tmp))));
+			cv::Mat image = readColorImage("../data/triangle/" + tmp);
+			vector<double> prd = Matrix::oneDArray(nn.predict(Flatten(readGrayImage("../data/triangle/" + tmp))));
 			int index = argMax(prd);
 			double total = 0;
 			for (double d : prd)
@@ -85,9 +85,9 @@ int main()
 		{
 			std::string tmp = "square" + std::to_string(i);
 			tmp += ".png";
-			cv::Mat image = readColorImage("data/square/" + tmp);
-			nn.predict(Flatten(readGrayImage("data/square/" + tmp)));
-			vector<double> prd = Matrix::oneDArray(nn.predict(Flatten(readGrayImage("data/square/" + tmp))));
+			cv::Mat image = readColorImage("../data/square/" + tmp);
+			nn.predict(Flatten(readGrayImage("../data/square/" + tmp)));
+			vector<double> prd = Matrix::oneDArray(nn.predict(Flatten(readGrayImage("../data/square/" + tmp))));
 			int index = argMax(prd);
 			double total = 0;
 			for (double d : prd)
@@ -107,9 +107,9 @@ int main()
 		{
 			std::string tmp = "circle" + std::to_string(i);
 			tmp += ".png";
-			cv::Mat image = readColorImage("data/circle/" + tmp);
-			nn.predict(Flatten(readGrayImage("data/circle/" + tmp)));
-			vector<double> prd = Matrix::oneDArray(nn.predict(Flatten(readGrayImage("data/circle/" + tmp))));
+			cv::Mat image = readColorImage("../data/circle/" + tmp);
+			nn.predict(Flatten(readGrayImage("../data/circle/" + tmp)));
+			vector<double> prd = Matrix::oneDArray(nn.predict(Flatten(readGrayImage("../data/circle/" + tmp))));
 			int index = argMax(prd);
 			double total = 0;
 			for (double d : prd)
