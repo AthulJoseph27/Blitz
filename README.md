@@ -4,7 +4,7 @@
 
 1. Copy the Blitz folder under the Library folder(of this repo) and paste it inside your project directory.
 
-2. Install OpenCv, just run brew install opencv on your terminal
+2. Install OpenCv, just run `brew install opencv` on your terminal
 
 3. If you want to use some other library, you can install them in a similar way, using brew.
 
