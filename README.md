@@ -2,7 +2,7 @@
 
 ## Mac OS
 
-1. Copy the Blitz folder under the Library folder(of this repo) and paste it inside your project directory.
+1. Copy the Blitz folder inside the Library folder(of this repo) and paste it inside your project directory.
 
 2. Install OpenCv, just run `brew install opencv` on your terminal
 
@@ -10,7 +10,7 @@
 
 4. Use `clang++ -std=c++14 yourProgamFile.cpp -I./Blitz/include/ -L./Blitz/lib/ -lBlitz $(pkg-config --cflags --libs opencv4)` to compile your code.
 
-5. If you have installed some other library, then add them to the above command after opencv4.s
+5. If you have installed some other library, then add them to the above command after opencv4.
 
 Thats it! It is as simple as that, no need to worry about anything else.
 
